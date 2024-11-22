@@ -1,6 +1,6 @@
 const moment = require("moment");
 const path = require("path");
-const fetch = require("node-fetch");
+const axios = require("axios");
 const { I18n } = require("i18n");
 
 const webhookURL = process.env.DISCORD_WEBHOOK;
@@ -30,12 +30,10 @@ async function hook(message, embed) {
     embeds: [embed],
   };
 
-  await fetch(webhookURL, {
-    method: "POST",
+  await axios.post(webhookURL, payload, {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
   });
 }
 

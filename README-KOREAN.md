@@ -18,11 +18,11 @@ App Store Connect status bot 은 앱스토어에 올라가 있는 나의 앱 심
 
 # 미리보기 🤖
 
-<img src="./.github/images/preview_ko.png" width="70%">
+<img src="./.github/images/preview_ko.png" width="70%" alt="">
 
 # 사용법 👨🏻‍💻
 
-## 1. API를 호출하기 위해서는 토큰을 먼저 생성합니다.
+## 1. API를 호출하기 위해서는 토큰을 먼저 생성합니다
 
 `KEY ID` 를 얻기 위해서는 먼저 [App Store Connect](https://appstoreconnect.apple.com/) 에 접속합니다.
 

@@ -18,11 +18,11 @@ App Store Connect status botはアプリの審査状態をSlackにメッセー�
 
 # プレビュー 🤖
 
-<img src="./.github/images/preview.png" width="70%">
+<img src="./.github/images/preview.png" width="70%" alt="">
 
 # 使用 👨🏻‍💻
 
-## 1. APIをコールするためにはトークンをまず作ります。
+## 1. APIをコールするためにはトークンをまず作ります
 
 `KEY ID` を得るために [App Store Connect](https://appstoreconnect.apple.com/)へ接続します。
 

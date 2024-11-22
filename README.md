@@ -19,7 +19,7 @@ For using this bot, Just `fork` this repository is Super Easy
 
 # Preview 🤖
 
-<img src="./.github/images/preview.png" width="70%">
+<img src="./.github/images/preview.png" width="70%" alt="">
 
 # Usage 👨🏻‍💻
 
@@ -38,7 +38,7 @@ To get your Key ID, copy it from App Store Connect by logging in to [App Store C
 6. Generate Slack Webhook token.
 7. Fork this repository.
 
-## 3. Setting Secrets with your keys.
+## 3. Setting Secrets with your keys
 
 - Go to `Settings` - `Secrets and variables` - `New repository secret`
 

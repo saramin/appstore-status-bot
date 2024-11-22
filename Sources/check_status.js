@@ -2,10 +2,9 @@ const slack = require("./slack.js");
 const discord = require("./discord.js");
 const exec = require("child_process").exec;
 const dirty = require("dirty");
-const { Octokit, App } = require("octokit");
-const request = require("request-promise-native");
-const { prependOnceListener } = require("process");
+const { Octokit } = require("octokit");
 const fs = require("fs").promises;
+const axios = require("axios");
 const env = Object.create(process.env);
 const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });
 
@@ -15,7 +14,7 @@ const main = async () => {
   exec(
     "ruby Sources/fetch_app_status.rb",
     { env: env },
-    function (err, stdout, stderr) {
+    function (_error, stdout, stderr) {
       if (stdout) {
         var apps = JSON.parse(stdout);
         console.log(apps);
@@ -72,16 +71,12 @@ const getGist = async () => {
   const filename = Object.keys(gist.data.files)[0];
   const rawdataURL = gist.data.files[filename].raw_url;
 
-  const options = {
-    url: rawdataURL,
-  };
-
-  const result = await request.get(options);
+  const response = await axios.get(rawdataURL);
   try {
-    await fs.writeFile("store.db", result);
-    console.log("[*] file saved!");
+    await fs.writeFile("store.db", response.data);
+    console.debug("[*] file saved!");
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

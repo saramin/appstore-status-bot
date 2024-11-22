@@ -4,8 +4,8 @@ import dirty from "dirty";
 import { promises as fs } from "fs";
 import { Octokit } from "octokit";
 
-import * as discord from "./discord";
-import * as slack from "./slack";
+import * as discord from "./discord.js";
+import * as slack from "./slack.js";
 
 const env = Object.create(process.env);
 const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });

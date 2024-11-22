@@ -1,7 +1,12 @@
-import moment from "moment";
-import { join } from "path";
 import { IncomingWebhook } from "@slack/webhook";
 import { I18n } from "i18n";
+import moment from "moment";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
+
+// __dirname 대체
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const webhookURL = process.env.SLACK_WEBHOOK;
 const language = process.env.LANGUAGE;
@@ -15,17 +20,9 @@ i18n.configure({
 
 i18n.setLocale(language || "en");
 
-export function post(appInfo, submissionStartDate) {
-  const status = i18n.__(appInfo.status);
-  const message = i18n.__("Message", { appname: appInfo.name, status: status });
-  const attachment = slackAttachment(appInfo, submissionStartDate);
-
-  hook(message, attachment);
-}
-
 async function hook(message, attachment) {
   if (!webhookURL) {
-    console.log("No Slack webhook URL provided.");
+    console.error("No Slack webhook URL provided.");
     return;
   }
 
@@ -34,6 +31,33 @@ async function hook(message, attachment) {
     text: message,
     attachments: [attachment],
   });
+}
+
+function colorForStatus(status) {
+  const infoColor = "#8e8e8e";
+  const warningColor = "#f4f124";
+  const successColor1 = "#1eb6fc";
+  const successColor2 = "#14ba40";
+  const failureColor = "#e0143d";
+  const colorMapping = {
+    "Prepare for Submission": infoColor,
+    "Waiting For Review": infoColor,
+    "In Review": successColor1,
+    "Pending Contract": warningColor,
+    "Waiting For Export Compliance": warningColor,
+    "Pending Developer Release": successColor2,
+    "Processing for App Store": successColor2,
+    "Pending Apple Release": successColor2,
+    "Ready for Sale": successColor2,
+    Rejected: failureColor,
+    "Metadata Rejected": failureColor,
+    "Removed From Sale": failureColor,
+    "Developer Rejected": failureColor,
+    "Developer Removed From Sale": failureColor,
+    "Invalid Binary": failureColor,
+  };
+
+  return colorMapping[status];
 }
 
 function slackAttachment(appInfo, submissionStartDate) {
@@ -65,11 +89,11 @@ function slackAttachment(appInfo, submissionStartDate) {
   // Set elapsed time since "Waiting For Review" start
   if (
     submissionStartDate &&
-    appInfo.status != "Prepare for Submission" &&
-    appInfo.status != "Waiting For Review"
+    appInfo.status !== "Prepare for Submission" &&
+    appInfo.status !== "Waiting For Review"
   ) {
     const elapsedHours = moment().diff(moment(submissionStartDate), "hours");
-    attachment["fields"].push({
+    attachment.fields.push({
       title: "Elapsed Time",
       value: `${elapsedHours} hours`,
       short: true,
@@ -78,29 +102,10 @@ function slackAttachment(appInfo, submissionStartDate) {
   return attachment;
 }
 
-function colorForStatus(status) {
-  const infoColor = "#8e8e8e";
-  const warningColor = "#f4f124";
-  const successColor1 = "#1eb6fc";
-  const successColor2 = "#14ba40";
-  const failureColor = "#e0143d";
-  const colorMapping = {
-    "Prepare for Submission": infoColor,
-    "Waiting For Review": infoColor,
-    "In Review": successColor1,
-    "Pending Contract": warningColor,
-    "Waiting For Export Compliance": warningColor,
-    "Pending Developer Release": successColor2,
-    "Processing for App Store": successColor2,
-    "Pending Apple Release": successColor2,
-    "Ready for Sale": successColor2,
-    Rejected: failureColor,
-    "Metadata Rejected": failureColor,
-    "Removed From Sale": failureColor,
-    "Developer Rejected": failureColor,
-    "Developer Removed From Sale": failureColor,
-    "Invalid Binary": failureColor,
-  };
+export function post(appInfo, submissionStartDate) {
+  const status = i18n.__(appInfo.status);
+  const message = i18n.__("Message", { appname: appInfo.name, status });
+  const attachment = slackAttachment(appInfo, submissionStartDate);
 
-  return colorMapping[status];
+  hook(message, attachment);
 }

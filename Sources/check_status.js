@@ -1,76 +1,27 @@
-import * as slack from "./slack.js";
-import * as discord from "./discord.js";
+import axios from "axios";
 import { exec } from "child_process";
 import dirty from "dirty";
-import { Octokit } from "octokit";
 import { promises as fs } from "fs";
-import axios from "axios";
+import { Octokit } from "octokit";
+
+import * as discord from "./discord";
+import * as slack from "./slack";
 
 const env = Object.create(process.env);
 const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });
 
-const main = async () => {
-  await getGist();
-
-  exec(
-    "ruby Sources/fetch_app_status.rb",
-    { env: env },
-    function (_error, stdout, stderr) {
-      if (stdout) {
-        var apps = JSON.parse(stdout);
-        console.log(apps);
-        for (let app of apps) {
-          checkVersion(app);
-        }
-      } else {
-        console.log("There was a problem fetching the status of the app!");
-        console.log(stderr);
-      }
-    },
-  );
-};
-
-const checkVersion = async (app) => {
-  var appInfoKey = "appInfo-" + app.appID;
-  var submissionStartKey = "submissionStart" + app.appID;
-
-  const db = dirty("store.db");
-  db.on("load", async function () {
-    var lastAppInfo = db.get(appInfoKey);
-    if (!lastAppInfo || lastAppInfo.status != app.status) {
-      console.log("[*] status is different");
-
-      slack.post(app, db.get(submissionStartKey));
-      discord.post(app, db.get(submissionStartKey));
-
-      if (app.status == "Waiting For Review") {
-        db.set(submissionStartKey, new Date());
-      }
-    } else {
-      console.log("[*] status is same");
-    }
-
-    db.set(appInfoKey, app);
-
-    try {
-      const data = await fs.readFile("store.db", "utf-8");
-      await updateGist(data);
-    } catch (error) {
-      console.log(error);
-    }
-  });
-};
-
 const getGist = async () => {
-  const gist = await octokit.rest.gists
+  const gists = await octokit.rest.gists
     .get({
       gist_id: process.env.GIST_ID,
     })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
-  if (!gist) return;
+  if (!gists) {
+    return;
+  }
 
-  const filename = Object.keys(gist.data.files)[0];
-  const rawdataURL = gist.data.files[filename].raw_url;
+  const filename = Object.keys(gists.data.files)[0];
+  const rawdataURL = gists.data.files[filename].raw_url;
 
   const response = await axios.get(rawdataURL);
   try {
@@ -82,22 +33,76 @@ const getGist = async () => {
 };
 
 const updateGist = async (content) => {
-  const gist = await octokit.rest.gists
+  const gists = await octokit.rest.gists
     .get({
       gist_id: process.env.GIST_ID,
     })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
-  if (!gist) return;
+  if (!gists) {
+    return;
+  }
 
-  const filename = Object.keys(gist.data.files)[0];
+  const filename = Object.keys(gists.data.files)[0];
   await octokit.rest.gists.update({
     gist_id: process.env.GIST_ID,
     files: {
       [filename]: {
-        content: content,
+        content,
       },
     },
   });
+};
+
+const checkVersion = async (app) => {
+  const appInfoKey = "appInfo-" + app.appID;
+  const submissionStartKey = "submissionStart" + app.appID;
+
+  const db = dirty("store.db");
+  db.on("load", async function () {
+    const lastAppInfo = db.get(appInfoKey);
+    if (!lastAppInfo || lastAppInfo.status !== app.status) {
+      console.debug("[*] status is different");
+
+      slack.post(app, db.get(submissionStartKey));
+      discord.post(app, db.get(submissionStartKey));
+
+      if (app.status === "Waiting For Review") {
+        db.set(submissionStartKey, new Date());
+      }
+    } else {
+      console.error("[*] status is same");
+    }
+
+    db.set(appInfoKey, app);
+
+    try {
+      const data = await fs.readFile("store.db", "utf-8");
+      await updateGist(data);
+    } catch (error) {
+      console.error(error);
+    }
+  });
+};
+
+const main = async () => {
+  await getGist();
+
+  exec(
+    "ruby Sources/fetch_app_status.rb",
+    { env },
+    function (_error, stdout, stderr) {
+      if (stdout) {
+        const apps = JSON.parse(stdout);
+        console.debug(apps);
+        for (const app of apps) {
+          checkVersion(app);
+        }
+      } else {
+        console.error("There was a problem fetching the status of the app!");
+        console.error(stderr);
+      }
+    },
+  );
 };
 
 main();

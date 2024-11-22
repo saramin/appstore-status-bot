@@ -1,7 +1,7 @@
-const moment = require("moment");
-const path = require("path");
-const axios = require("axios");
-const { I18n } = require("i18n");
+import moment from "moment";
+import { join } from "path";
+import * as axios from "axios";
+import { I18n } from "i18n";
 
 const webhookURL = process.env.DISCORD_WEBHOOK;
 const language = process.env.LANGUAGE;
@@ -9,13 +9,13 @@ const i18n = new I18n();
 
 i18n.configure({
   locales: ["en", "ko", "ja"],
-  directory: path.join(__dirname, "../locales"),
+  directory: join(__dirname, "../locales"),
   defaultLocale: "en",
 });
 
 i18n.setLocale(language || "en");
 
-function post(appInfo, submissionStartDate) {
+export function post(appInfo, submissionStartDate) {
   if (!webhookURL) return;
   const status = i18n.__(appInfo.status);
   const message = i18n.__("Message", { appname: appInfo.name, status: status });
@@ -110,7 +110,3 @@ function colorForStatus(status) {
 
   return colorMapping[status];
 }
-
-module.exports = {
-  post: post,
-};

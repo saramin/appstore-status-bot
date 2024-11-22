@@ -1,10 +1,11 @@
-const slack = require("./slack.js");
-const discord = require("./discord.js");
-const exec = require("child_process").exec;
-const dirty = require("dirty");
-const { Octokit } = require("octokit");
-const fs = require("fs").promises;
-const axios = require("axios");
+import * as slack from "./slack.js";
+import * as discord from "./discord.js";
+import { exec } from "child_process";
+import dirty from "dirty";
+import { Octokit } from "octokit";
+import { promises as fs } from "fs";
+import axios from "axios";
+
 const env = Object.create(process.env);
 const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });
 

@@ -59,7 +59,7 @@ To get your Key ID, copy it from App Store Connect by logging in to [App Store C
 
 - [fetch.yml](./.github/workflows/fetch.yml)
 
-In `workflow` file, can change lanauges and fetch schedule default `schedule` is every 15 minutes.
+In `workflow` file, can change languages and fetch schedule default `schedule` is every 15 minutes.
 
 # References 🙇🏻‍♂️
 

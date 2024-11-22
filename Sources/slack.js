@@ -8,12 +8,12 @@ const language = process.env.LANGUAGE;
 const i18n = new I18n();
 
 i18n.configure({
-  locales: ['en','ko', 'ja'],
-  directory: path.join(__dirname, '../locales'),
-  defaultLocale: 'en'
+  locales: ["en", "ko", "ja"],
+  directory: path.join(__dirname, "../locales"),
+  defaultLocale: "en",
 });
 
-i18n.setLocale(language || 'en');
+i18n.setLocale(language || "en");
 
 function post(appInfo, submissionStartDate) {
   const status = i18n.__(appInfo.status);
@@ -29,7 +29,6 @@ function post(appInfo, submissionStartDate) {
 }
 
 async function hook(message, attachment) {
-
   if (!webhookURL) {
     console.log("No Slack webhook URL provided.");
     return;

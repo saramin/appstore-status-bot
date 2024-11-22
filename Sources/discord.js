@@ -8,12 +8,12 @@ const language = process.env.LANGUAGE;
 const i18n = new I18n();
 
 i18n.configure({
-  locales: ['en', 'ko', 'ja'],
-  directory: path.join(__dirname, '../locales'),
-  defaultLocale: 'en'
+  locales: ["en", "ko", "ja"],
+  directory: path.join(__dirname, "../locales"),
+  defaultLocale: "en",
 });
 
-i18n.setLocale(language || 'en');
+i18n.setLocale(language || "en");
 
 function post(appInfo, submissionStartDate) {
   if (!webhookURL) return;
@@ -27,13 +27,13 @@ function post(appInfo, submissionStartDate) {
 async function hook(message, embed) {
   const payload = {
     content: message,
-    embeds: [embed]
+    embeds: [embed],
   };
 
   await fetch(webhookURL, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
   });
@@ -44,7 +44,7 @@ function discordEmbed(appInfo, submissionStartDate) {
     title: "App Store Connect",
     author: {
       name: appInfo.name,
-      icon_url: appInfo.iconURL
+      icon_url: appInfo.iconURL,
     },
     url: `https://appstoreconnect.apple.com/apps/${appInfo.appID}/appstore`,
     fields: [
@@ -57,13 +57,14 @@ function discordEmbed(appInfo, submissionStartDate) {
         name: i18n.__("Status"),
         value: i18n.__(appInfo.status),
         inline: true,
-      }
+      },
     ],
     footer: {
       text: "appstore-status-bot",
-      icon_url: "https://icons-for-free.com/iconfiles/png/512/app+store+apple+apps+game+games+store+icon-1320085881005897327.png"
+      icon_url:
+        "https://icons-for-free.com/iconfiles/png/512/app+store+apple+apps+game+games+store+icon-1320085881005897327.png",
     },
-    timestamp: new Date()
+    timestamp: new Date(),
   };
 
   // Set elapsed time since "Waiting For Review" start

@@ -26,7 +26,7 @@ const main = async () => {
         console.log("There was a problem fetching the status of the app!");
         console.log(stderr);
       }
-    }
+    },
   );
 };
 

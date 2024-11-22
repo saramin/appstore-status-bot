@@ -20,11 +20,6 @@ function post(appInfo, submissionStartDate) {
   const message = i18n.__("Message", { appname: appInfo.name, status: status });
   const attachment = slackAttachment(appInfo, submissionStartDate);
 
-  const params = {
-    attachments: [attachment],
-    as_user: "true",
-  };
-
   hook(message, attachment);
 }
 

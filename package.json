@@ -2,6 +2,7 @@
   "name": "appstore-status-bot",
   "version": "1.0.3",
   "description": "",
+  "type": "module",
   "main": "Sources/check_status.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

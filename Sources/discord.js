@@ -4,7 +4,7 @@ import moment from "moment";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-import { DISCORD_WEBHOOK, LANGUAGE } from "./env";
+import { DISCORD_WEBHOOK, LANGUAGE } from "./env.js";
 
 // __dirname 대체
 const __filename = fileURLToPath(import.meta.url);

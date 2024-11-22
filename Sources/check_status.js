@@ -24,7 +24,13 @@ const getGist = async () => {
 
   const response = await axios.get(rawdataURL);
   try {
-    await fs.writeFile("store.db", response.data);
+    // Convert response.data to a string before writing
+    const data =
+      typeof response.data === "object"
+        ? JSON.stringify(response.data)
+        : response.data;
+
+    await fs.writeFile("store.db", data);
     console.debug("[*] file saved!");
   } catch (error) {
     console.error(error);

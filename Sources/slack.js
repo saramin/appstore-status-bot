@@ -4,12 +4,12 @@ import moment from "moment";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
+import { LANGUAGE, SLACK_WEBHOOK } from "./env";
+
 // __dirname 대체
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const webhookURL = process.env.SLACK_WEBHOOK;
-const language = process.env.LANGUAGE;
 const i18n = new I18n();
 
 i18n.configure({
@@ -18,15 +18,15 @@ i18n.configure({
   defaultLocale: "en",
 });
 
-i18n.setLocale(language || "en");
+i18n.setLocale(LANGUAGE || "en");
 
 async function hook(message, attachment) {
-  if (!webhookURL) {
+  if (!SLACK_WEBHOOK) {
     console.error("No Slack webhook URL provided.");
     return;
   }
 
-  const webhook = new IncomingWebhook(webhookURL, {});
+  const webhook = new IncomingWebhook(SLACK_WEBHOOK, {});
   await webhook.send({
     text: message,
     attachments: [attachment],

@@ -5,16 +5,15 @@ import { promises as fs } from "fs";
 import { Octokit } from "octokit";
 
 import * as discord from "./discord.js";
+import * as env from "./env";
 import * as slack from "./slack.js";
 
-const env = Object.create(process.env);
-const octokit = new Octokit({ auth: `token ${process.env.GH_TOKEN}` });
+const octokit = new Octokit({ auth: `token ${env.GH_TOKEN}` });
+const gist_id = env.GIST_ID;
 
 const getGist = async () => {
   const gists = await octokit.rest.gists
-    .get({
-      gist_id: process.env.GIST_ID,
-    })
+    .get({ gist_id })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
   if (!gists) {
     return;
@@ -34,9 +33,7 @@ const getGist = async () => {
 
 const updateGist = async (content) => {
   const gists = await octokit.rest.gists
-    .get({
-      gist_id: process.env.GIST_ID,
-    })
+    .get({ gist_id })
     .catch((error) => console.error(`[*] Unable to update gist\n${error}`));
   if (!gists) {
     return;
@@ -44,7 +41,7 @@ const updateGist = async (content) => {
 
   const filename = Object.keys(gists.data.files)[0];
   await octokit.rest.gists.update({
-    gist_id: process.env.GIST_ID,
+    gist_id,
     files: {
       [filename]: {
         content,

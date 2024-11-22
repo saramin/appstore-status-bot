@@ -1,15 +1,15 @@
-import * as axios from "axios";
+import axios from "axios";
 import { I18n } from "i18n";
 import moment from "moment";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
+import { DISCORD_WEBHOOK, LANGUAGE } from "./env";
+
 // __dirname 대체
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const webhookURL = process.env.DISCORD_WEBHOOK;
-const language = process.env.LANGUAGE;
 const i18n = new I18n();
 
 i18n.configure({
@@ -18,7 +18,7 @@ i18n.configure({
   defaultLocale: "en",
 });
 
-i18n.setLocale(language || "en");
+i18n.setLocale(LANGUAGE || "en");
 
 async function hook(message, embed) {
   const payload = {
@@ -26,7 +26,7 @@ async function hook(message, embed) {
     embeds: [embed],
   };
 
-  await axios.post(webhookURL, payload, {
+  await axios.post(DISCORD_WEBHOOK, payload, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -108,7 +108,7 @@ function discordEmbed(appInfo, submissionStartDate) {
 }
 
 export function post(appInfo, submissionStartDate) {
-  if (!webhookURL) {
+  if (!DISCORD_WEBHOOK) {
     return;
   }
   const status = i18n.__(appInfo.status);

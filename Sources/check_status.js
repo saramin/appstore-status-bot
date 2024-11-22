@@ -57,13 +57,13 @@ const checkVersion = async (app) => {
   const db = dirty("store.db");
   db.on("load", async function () {
     const lastAppInfo = db.get(appInfoKey);
-    if (!lastAppInfo || lastAppInfo.status !== app.status) {
+    if (!lastAppInfo || lastAppInfo.status != app.status) {
       console.debug("[*] status is different");
 
       slack.post(app, db.get(submissionStartKey));
       discord.post(app, db.get(submissionStartKey));
 
-      if (app.status === "Waiting For Review") {
+      if (app.status == "Waiting For Review") {
         db.set(submissionStartKey, new Date());
       }
     } else {

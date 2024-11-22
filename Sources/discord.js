@@ -91,8 +91,8 @@ function discordEmbed(appInfo, submissionStartDate) {
   // Set elapsed time since "Waiting For Review" start
   if (
     submissionStartDate &&
-    appInfo.status !== "Prepare for Submission" &&
-    appInfo.status !== "Waiting For Review"
+    appInfo.status != "Prepare for Submission" &&
+    appInfo.status != "Waiting For Review"
   ) {
     const elapsedHours = moment().diff(moment(submissionStartDate), "hours");
     embed.fields.push({

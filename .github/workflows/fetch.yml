@@ -18,7 +18,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.0"
-      - run: gem install bundler:2.6.5
+      - run: gem install bundler:2.5.4
       - run: bundle install
       - run: npm install
       - run: gem install fastlane -v '2.226.0'

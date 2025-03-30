@@ -21,6 +21,17 @@ i18n.configure({
 
 i18n.setLocale(LANGUAGE || "en");
 
+export function post(appInfo, submissionStartDate) {
+  if (!DISCORD_WEBHOOK) {
+    return;
+  }
+  const status = i18n.__(appInfo.status);
+  const message = i18n.__("Message", { appname: appInfo.name, status });
+  const embed = discordEmbed(appInfo, submissionStartDate);
+
+  hook(message, embed);
+}
+
 async function hook(message, embed) {
   const payload = {
     content: message,
@@ -32,33 +43,6 @@ async function hook(message, embed) {
       "Content-Type": "application/json",
     },
   });
-}
-
-function colorForStatus(status) {
-  const infoColor = 0x8e8e8e;
-  const warningColor = 0xf4f124;
-  const successColor1 = 0x1eb6fc;
-  const successColor2 = 0x14ba40;
-  const failureColor = 0xe0143d;
-  const colorMapping = {
-    "Prepare for Submission": infoColor,
-    "Waiting For Review": infoColor,
-    "In Review": successColor1,
-    "Pending Contract": warningColor,
-    "Waiting For Export Compliance": warningColor,
-    "Pending Developer Release": successColor2,
-    "Processing for App Store": successColor2,
-    "Pending Apple Release": successColor2,
-    "Ready for Sale": successColor2,
-    Rejected: failureColor,
-    "Metadata Rejected": failureColor,
-    "Removed From Sale": failureColor,
-    "Developer Rejected": failureColor,
-    "Developer Removed From Sale": failureColor,
-    "Invalid Binary": failureColor,
-  };
-
-  return colorMapping[status];
 }
 
 function discordEmbed(appInfo, submissionStartDate) {
@@ -108,13 +92,29 @@ function discordEmbed(appInfo, submissionStartDate) {
   return embed;
 }
 
-export function post(appInfo, submissionStartDate) {
-  if (!DISCORD_WEBHOOK) {
-    return;
-  }
-  const status = i18n.__(appInfo.status);
-  const message = i18n.__("Message", { appname: appInfo.name, status });
-  const embed = discordEmbed(appInfo, submissionStartDate);
+function colorForStatus(status) {
+  const infoColor = 0x8e8e8e;
+  const warningColor = 0xf4f124;
+  const successColor1 = 0x1eb6fc;
+  const successColor2 = 0x14ba40;
+  const failureColor = 0xe0143d;
+  const colorMapping = {
+    "Prepare for Submission": infoColor,
+    "Waiting For Review": infoColor,
+    "In Review": successColor1,
+    "Pending Contract": warningColor,
+    "Waiting For Export Compliance": warningColor,
+    "Pending Developer Release": successColor2,
+    "Processing for App Store": successColor2,
+    "Pending Apple Release": successColor2,
+    "Ready for Sale": successColor2,
+    Rejected: failureColor,
+    "Metadata Rejected": failureColor,
+    "Removed From Sale": failureColor,
+    "Developer Rejected": failureColor,
+    "Developer Removed From Sale": failureColor,
+    "Invalid Binary": failureColor,
+  };
 
-  hook(message, embed);
+  return colorMapping[status];
 }

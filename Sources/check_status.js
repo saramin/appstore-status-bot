@@ -23,11 +23,22 @@ const getGist = async () => {
   const rawdataURL = gists.data.files[filename].raw_url;
 
   const response = await axios.get(rawdataURL);
+
   try {
-    // Convert response.data to a string before writing
-    const lines = Array.isArray(response.data)
-      ? response.data
-      : response.data.split('\n').filter((line) => line.trim() !== "");
+    let lines;
+
+    // 줄 단위 JSON 파일로 구성되어 있어야 dirty가 정상 처리함
+    if (typeof response.data === "string") {
+      lines = response.data.split("\n").filter((line) => line.trim() !== "");
+    } else if (Array.isArray(response.data)) {
+      // 배열이면 각 항목을 줄 단위 JSON으로 직렬화
+      lines = response.data.map((entry) => JSON.stringify(entry));
+    } else {
+      // 일반 객체면 key/value 쌍으로 줄 단위 JSON 구성
+      lines = Object.entries(response.data).map(([key, val]) =>
+        JSON.stringify({ key, val }),
+      );
+    }
 
     await fs.writeFile("store.db", lines.join("\n") + "\n");
     console.debug("[*] file saved!");

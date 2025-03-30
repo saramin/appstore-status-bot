@@ -114,9 +114,10 @@ const checkVersion = async (app) => {
         });
 
       // Map을 다시 줄 단위 JSON으로 변환
-      const cleanedData = Array.from(deduplicatedMap.entries())
-        .map(([key, val]) => JSON.stringify({ key, val }))
-        .join("\n") + "\n";
+      const cleanedData =
+        Array.from(deduplicatedMap.entries())
+          .map(([key, val]) => JSON.stringify({ key, val }))
+          .join("\n") + "\n";
 
       await updateGist(cleanedData);
     } catch (error) {

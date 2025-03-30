@@ -5,7 +5,7 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
 const env = Object.create(process.env);
-const { LANGUAGE, SLACK_WEBHOOK }= env;
+const { LANGUAGE, SLACK_WEBHOOK } = env;
 
 // __dirname 대체
 const __filename = fileURLToPath(import.meta.url);

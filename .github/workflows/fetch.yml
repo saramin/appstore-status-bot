@@ -3,12 +3,9 @@ name: Fetch Appstore Info
 permissions: read-all
 
 on:
-  workflow_dispatch: # Manual dispatch
+  workflow_dispatch:
   schedule:
     - cron: 0/15 * * * *
-  push:
-    branches:
-      - master
 
 jobs:
   build:

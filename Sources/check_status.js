@@ -95,7 +95,30 @@ const checkVersion = async (app) => {
 
     try {
       const data = await fs.readFile("store.db", "utf-8");
-      await updateGist(data);
+
+      const deduplicatedMap = new Map();
+
+      // 줄 단위 JSON을 순회하면서 마지막 값을 유지
+      data
+        .split("\n")
+        .filter((line) => line.trim() !== "")
+        .forEach((line) => {
+          try {
+            const obj = JSON.parse(line);
+            if (obj.key && "val" in obj) {
+              deduplicatedMap.set(obj.key, obj.val);
+            }
+          } catch (e) {
+            console.warn("[*] Skipping invalid line in store.db:", line);
+          }
+        });
+
+      // Map을 다시 줄 단위 JSON으로 변환
+      const cleanedData = Array.from(deduplicatedMap.entries())
+        .map(([key, val]) => JSON.stringify({ key, val }))
+        .join("\n") + "\n";
+
+      await updateGist(cleanedData);
     } catch (error) {
       console.error(error);
     }

@@ -5,9 +5,9 @@ import { promises as fs } from "fs";
 import { Octokit } from "octokit";
 
 import * as discord from "./discord.js";
-import * as env from "./env.js";
 import * as slack from "./slack.js";
 
+const env = Object.create(process.env);
 const octokit = new Octokit({ auth: `token ${env.GH_TOKEN}` });
 const gist_id = env.GIST_ID;
 

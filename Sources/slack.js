@@ -4,7 +4,8 @@ import moment from "moment";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
-import { LANGUAGE, SLACK_WEBHOOK } from "./env.js";
+const env = Object.create(process.env);
+const { LANGUAGE, SLACK_WEBHOOK }= env;
 
 // __dirname 대체
 const __filename = fileURLToPath(import.meta.url);

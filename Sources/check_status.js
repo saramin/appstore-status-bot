@@ -33,11 +33,16 @@ const getGist = async () => {
     } else if (Array.isArray(response.data)) {
       // 배열이면 각 항목을 줄 단위 JSON으로 직렬화
       lines = response.data.map((entry) => JSON.stringify(entry));
+    } else if (
+      response.data &&
+      typeof response.data === "object" &&
+      response.data.key &&
+      response.data.val
+    ) {
+      // 이미 올바른 구조라면 그대로 하나만 처리
+      lines = [JSON.stringify(response.data)];
     } else {
-      // 일반 객체면 key/value 쌍으로 줄 단위 JSON 구성
-      lines = Object.entries(response.data).map(([key, val]) =>
-        JSON.stringify({ key, val }),
-      );
+      throw new Error("Unsupported Gist data format");
     }
 
     await fs.writeFile("store.db", lines.join("\n") + "\n");

@@ -1,0 +1,14 @@
+name: appstore-status-bot
+id: ari:cloud:compass:fbd1859d-75f6-4abd-84f3-0050073f34ef:component/039537c6-f5ee-4079-8768-97bd5e53bb46/17d6538b-8928-4091-86fd-4cf9d7d58bb3
+description: 🚀  Share your application status with your team for slack. using github actions.
+configVersion: 1
+typeId: SERVICE
+fields:
+  tier: 4
+links: []
+relationships:
+  DEPENDS_ON: []
+labels:
+  - language:javascript
+  - source:github
+customFields: null

@@ -5,7 +5,7 @@ permissions: read-all
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0/15 * * * *
+    - cron: "7,22,37,52 * * * *"
   push:
     branches:
       - master

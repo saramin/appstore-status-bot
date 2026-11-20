@@ -5,7 +5,7 @@ permissions: read-all
 on:
   workflow_dispatch:
   schedule:
-    - cron: "7,22,37,52 * * * *"
+    - cron: "7,37 * * * *"
   push:
     branches:
       - master
@@ -24,7 +24,7 @@ jobs:
       - run: gem install bundler:2.5.4
       - run: bundle install
       - run: npm install
-      - run: gem install fastlane -v '2.226.0'
+      - run: gem install fastlane -v '2.242.0'
       - run: node Sources/check_status.js
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}

@@ -20,8 +20,8 @@ jobs:
           node-version: 22.x
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.0"
-      - run: gem install bundler:2.5.4
+          ruby-version: "3.3"
+      - run: gem install bundler:2.7.1
       - run: bundle install
       - run: npm install
       - run: gem install fastlane -v '2.242.0'
